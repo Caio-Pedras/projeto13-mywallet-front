@@ -19,7 +19,7 @@ export default function LoginPage() {
     { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
   ];
   const navigate = useNavigate();
-
+  const user = "Teste";
   function logIn() {
     setIsLoading(true);
     const body = {
@@ -38,26 +38,36 @@ export default function LoginPage() {
         </EmptyTransactions>
       );
     } else {
-      return teste.map(({ date, description, value, type }, index) => (
-        <TransactionWrapper key={index}>
-          <LeftInfo>
-            <p>{date}</p>
-            <h1>{description}</h1>
-          </LeftInfo>
-          <RightInfo>
-            <h2 className={type}>
-              {value.toFixed(2).toString().replace(".", ",")}
-            </h2>
-            <ion-icon name="close-outline"></ion-icon>
-          </RightInfo>
-        </TransactionWrapper>
-      ));
+      return (
+        <>
+          <TransactionsWrapper>
+            {teste.map(({ date, description, value, type }, index) => (
+              <Transaction key={index}>
+                <LeftInfo>
+                  <p>{date}</p>
+                  <h1>{description}</h1>
+                </LeftInfo>
+                <RightInfo>
+                  <h2 className={type}>
+                    {value.toFixed(2).toString().replace(".", ",")}
+                  </h2>
+                  <ion-icon name="close-outline"></ion-icon>
+                </RightInfo>
+              </Transaction>
+            ))}
+          </TransactionsWrapper>
+          <BoxFooter>
+            <p>Saldo</p>
+            <h1>1,00</h1>
+          </BoxFooter>
+        </>
+      );
     }
   }
   return (
     <Container>
       <TopBanner>
-        <h1>Olá, Fulano</h1>
+        <h1>Olá, {user}</h1>
         <ion-icon name="exit-outline"></ion-icon>
       </TopBanner>
       <Box>{boxContent()}</Box>
@@ -147,6 +157,9 @@ const Box = styled.div`
   margin-top: 10px;
   position: relative;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 const EmptyTransactions = styled.div`
   position: absolute;
@@ -164,7 +177,7 @@ const EmptyTransactions = styled.div`
     text-align: center;
   }
 `;
-const TransactionWrapper = styled.div`
+const Transaction = styled.div`
   display: flex;
   color: black;
   align-items: center;
@@ -211,3 +224,17 @@ const RightInfo = styled.div`
     color: #c70000;
   }
 `;
+const BoxFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  p {
+    color: "black";
+    font-size: 18px;
+    font-weight: 700;
+  }
+  h1 {
+    color: #03ac00;
+    font-size: 18px;
+  }
+`;
+const TransactionsWrapper = styled.div``;
