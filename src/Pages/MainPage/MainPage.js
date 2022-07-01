@@ -38,10 +38,7 @@ export default function LoginPage() {
     { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
     { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
   ]);
-  const teste = [
-    { date: "30/11", description: "teste", value: 39.01, type: "deposit" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-  ];
+
   const navigate = useNavigate();
   const user = "Teste";
   function logIn() {
