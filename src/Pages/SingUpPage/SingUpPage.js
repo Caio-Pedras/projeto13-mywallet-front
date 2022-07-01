@@ -41,7 +41,7 @@ export default function SingUpPage() {
         />
         <Input
           type="password"
-          placeholder="Senha"
+          placeholder="Confirme a senha"
           disabled={isLoading}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}

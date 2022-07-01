@@ -18,8 +18,9 @@ export default function LoginPage() {
       email,
       password,
     };
-    alert("estou fucnionando", body);
+    alert("estou funcionando", body);
     setIsLoading(false);
+    navigate("/main");
   }
   return (
     <Container>
