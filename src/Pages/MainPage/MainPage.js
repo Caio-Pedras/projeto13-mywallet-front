@@ -13,6 +13,30 @@ export default function LoginPage() {
   const [transactions, setTransactions] = React.useState([
     { date: "30/11", description: "teste", value: 39.01, type: "deposit" },
     { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
+    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
   ]);
   const teste = [
     { date: "30/11", description: "teste", value: 39.01, type: "deposit" },
@@ -41,7 +65,7 @@ export default function LoginPage() {
       return (
         <>
           <TransactionsWrapper>
-            {teste.map(({ date, description, value, type }, index) => (
+            {transactions.map(({ date, description, value, type }, index) => (
               <Transaction key={index}>
                 <LeftInfo>
                   <p>{date}</p>
@@ -151,6 +175,8 @@ const Box = styled.div`
   /* opacity: ${(props) => props.opacity}; */
   height: 100%;
   width: 100%;
+  max-height: 100%;
+  overflow-y: hidden;
   max-width: 600px;
   border-radius: 10px;
   background-color: #ffffff;
@@ -227,6 +253,7 @@ const RightInfo = styled.div`
 const BoxFooter = styled.div`
   display: flex;
   justify-content: space-between;
+
   p {
     color: "black";
     font-size: 18px;
@@ -237,4 +264,8 @@ const BoxFooter = styled.div`
     font-size: 18px;
   }
 `;
-const TransactionsWrapper = styled.div``;
+const TransactionsWrapper = styled.div`
+  max-height: 100%;
+  overflow-y: scroll;
+  margin-bottom: 5px;
+`;

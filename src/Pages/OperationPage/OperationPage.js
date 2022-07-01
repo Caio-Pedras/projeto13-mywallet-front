@@ -73,7 +73,7 @@ const Button = styled.div`
   border-radius: 10px;
   font-size: 20px;
   font-weight: 400;
-  padding: 10px 0;
+  padding: 15px 0;
   margin-bottom: 40px;
   cursor: pointer;
   max-width: 600px;
