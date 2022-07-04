@@ -1,55 +1,52 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../userContext/userContext";
 import axios from "axios";
 import Loading from "../../components/Loading";
-import Input from "../../components/Input";
 
 export default function LoginPage() {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [transactions, setTransactions] = React.useState([
-    { date: "30/11", description: "teste", value: 39.01, type: "deposit" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-    { date: "01/07", description: "teste2", value: 29.01, type: "withdraw" },
-  ]);
-
+  const { URL, token, setToken } = useContext(UserContext);
+  const [transactions, setTransactions] = useState();
+  const [balance, setBalance] = useState();
   const navigate = useNavigate();
-  const user = "Teste";
-  function logIn() {
-    setIsLoading(true);
-    const body = {
-      email,
-      password,
+  const [user, setUser] = useState("");
+  useEffect(() => getTransactions(), []);
+
+  function getTransactions() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     };
-    alert("estou funcionando", body);
-    setIsLoading(false);
-    navigate("/main");
+    axios
+      .get(`${URL}/transactions`, config)
+      .then((res) => {
+        setTransactions(res.data.userTransactions);
+        setBalance(res.data.value);
+        setUser(res.data.name);
+      })
+      .catch((err) => console.log(err));
+  }
+  function deleteTransaction(id) {
+    if (window.confirm("Tem certeza que deseja excluir essa transação")) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      axios
+        .delete(`${URL}/transactions/${id}`, config)
+        .then((res) => {
+          alert("Transação deletada com sucesso");
+          getTransactions();
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("erro ao deletar transação");
+          getTransactions();
+        });
+    }
   }
   function boxContent() {
     if (transactions.length === 0) {
@@ -62,34 +59,66 @@ export default function LoginPage() {
       return (
         <>
           <TransactionsWrapper>
-            {transactions.map(({ date, description, value, type }, index) => (
-              <Transaction key={index}>
-                <LeftInfo>
-                  <p>{date}</p>
-                  <h1>{description}</h1>
-                </LeftInfo>
-                <RightInfo>
-                  <h2 className={type}>
-                    {value.toFixed(2).toString().replace(".", ",")}
-                  </h2>
-                  <ion-icon name="close-outline"></ion-icon>
-                </RightInfo>
-              </Transaction>
-            ))}
+            {transactions.map(
+              ({ date, description, value, type, _id }, index) => (
+                <Transaction key={index}>
+                  <LeftInfo>
+                    <p>{date}</p>
+                    <Link to={`/edit/${type}/${_id}`}>
+                      <h1>{description}</h1>
+                    </Link>
+                  </LeftInfo>
+                  <RightInfo>
+                    <p className={type}>
+                      {value?.toFixed(2).toString().replace(".", ",")}
+                    </p>
+                    <ion-icon
+                      name="close-outline"
+                      onClick={() => deleteTransaction(_id)}
+                    ></ion-icon>
+                  </RightInfo>
+                </Transaction>
+              )
+            )}
           </TransactionsWrapper>
           <BoxFooter>
             <p>Saldo</p>
-            <h1>1,00</h1>
+            <h1>{balance?.toFixed(2).toString().replace(".", ",")}</h1>
           </BoxFooter>
         </>
       );
     }
   }
+  function logout() {
+    if (window.confirm("Tem certeza que deseja deslogar?")) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      axios
+        .delete(`${URL}/logout`, config)
+        .then((res) => {
+          setToken();
+          navigate("/");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
+  if (!transactions) {
+    return (
+      <Container>
+        <Loading></Loading>
+      </Container>
+    );
+  }
   return (
     <Container>
       <TopBanner>
         <h1>Olá, {user}</h1>
-        <ion-icon name="exit-outline"></ion-icon>
+        <ion-icon name="exit-outline" onClick={() => logout()}></ion-icon>
       </TopBanner>
       <Box>{boxContent()}</Box>
       <Footer>
@@ -214,7 +243,7 @@ const Transaction = styled.div`
   }
   h1 {
     color: #000000;
-
+    word-break: break-all;
     font-size: 16px;
     font-weight: 400;
   }

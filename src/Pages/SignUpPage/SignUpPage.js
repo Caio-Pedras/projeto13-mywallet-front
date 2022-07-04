@@ -3,16 +3,47 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../userContext/userContext";
 import axios from "axios";
-import Loading from "../../components/Loading";
+
 import Input from "../../components/Input";
 
-export default function SingUpPage() {
-  const [email, setEmail] = React.useState("");
-  const [name, setName] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [confirmPassword, setConfirmPassword] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(false);
+export default function SignUpPage() {
+  const { URL } = useContext(UserContext);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  function postSignup() {
+    setIsLoading(true);
+    if (password !== confirmPassword) {
+      alert("As senhas precisam ser iguais");
+      setIsLoading(false);
+      return;
+    }
+
+    const body = {
+      email,
+      name,
+      password,
+      confirmPassword,
+    };
+
+    axios
+      .post(`${URL}/signup`, body)
+      .then((res) => {
+        setIsLoading(false);
+        navigate("/");
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err);
+        alert(
+          "Houve um erro, preencha os dados corretamente e tente novamente"
+        );
+      });
+  }
 
   return (
     <Container>
@@ -46,7 +77,7 @@ export default function SingUpPage() {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
-        <Button>
+        <Button onClick={() => postSignup()}>
           <p>Cadastrar</p>
         </Button>
       </Box>

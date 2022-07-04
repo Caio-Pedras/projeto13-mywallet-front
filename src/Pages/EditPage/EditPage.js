@@ -6,8 +6,9 @@ import axios from "axios";
 import Loading from "../../components/Loading";
 import Input from "../../components/Input";
 
-export default function OperationPage() {
-  const { operationType } = useParams();
+export default function EditPage() {
+  const { operationType, operationID } = useParams();
+
   const { URL, token } = useContext(UserContext);
   const [type, setType] = useState("");
   const [value, setValue] = useState("");
@@ -22,7 +23,7 @@ export default function OperationPage() {
     }
   }
   useEffect(() => checkType(), []);
-  function postTransaction() {
+  function editTransaction() {
     setIsLoading(true);
     setValue(Number(value));
     if (value <= 0) {
@@ -41,7 +42,7 @@ export default function OperationPage() {
       description,
     };
     axios
-      .post(`${URL}/transactions`, body, config)
+      .put(`${URL}/transactions/${operationID}`, body, config)
       .then((res) => {
         setIsLoading(false);
         navigate("/main");
@@ -57,7 +58,7 @@ export default function OperationPage() {
   }
   return (
     <Container>
-      <h1 onClick={() => console.log(value)}>Nova {type}</h1>
+      <h1>Atualizar {type}</h1>
       <Box opacity={isLoading ? 0.5 : 1}>
         <Input
           type="number"
@@ -74,8 +75,8 @@ export default function OperationPage() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <Button onClick={() => postTransaction()}>
-          <p>Salvar {type}</p>
+        <Button onClick={() => editTransaction()}>
+          <p>Atualizar {type}</p>
         </Button>
       </Box>
     </Container>

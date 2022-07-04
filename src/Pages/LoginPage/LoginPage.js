@@ -3,13 +3,13 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../userContext/userContext";
 import axios from "axios";
-import Loading from "../../components/Loading";
 import Input from "../../components/Input";
 
 export default function LoginPage() {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { URL, setToken } = useContext(UserContext);
   const navigate = useNavigate();
 
   function logIn() {
@@ -18,9 +18,22 @@ export default function LoginPage() {
       email,
       password,
     };
-    alert("estou funcionando", body);
+
+    axios
+      .post(`${URL}/login`, body)
+      .then((res) => {
+        setToken(res.data);
+        setIsLoading(false);
+        navigate("/main");
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err);
+        alert(
+          "Houve um erro, preencha os dados corretamente e tente novamente"
+        );
+      });
     setIsLoading(false);
-    navigate("/main");
   }
   return (
     <Container>
@@ -44,7 +57,7 @@ export default function LoginPage() {
           <p>Entrar</p>
         </Button>
       </Box>
-      <Link to="/singup">
+      <Link to="/signup">
         <Text>
           <p>Primeira vez? Cadastre-se!</p>
         </Text>

@@ -26,8 +26,8 @@ const Loader = styled.div`
   animation: is-rotating 1s infinite;
   width: 100px;
   height: 100px;
-  border: 10px solid gray;
-  border-top-color: #063970;
+  border: 10px solid #ffffff;
+  border-top-color: #3a245b;
   border-radius: 50%;
   margin-bottom: 20px;
   @keyframes is-rotating {
